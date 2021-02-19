@@ -83,32 +83,101 @@
       // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
-      function fetchAll() {
+      async function fetchAll() {
         // TODO
+        document.getElementById("recordIDcontainer").style.display = "none"
+        document.getElementById("recordForm").style.display = "none"
+
+        let res = await fetch(document.getElementById("endpoint").value)
+        console.log(res)
+        if (res.status >= 200  && res.status <= 299) {
+          const json = await res.json()
+          document.getElementById("output").value = JSON.stringify(json)
+        } else {
+          console.log(res.status + " " + res.statusText)
+          document.getElementById("output").value = "Network Error: " + res.status + " " + res.statusText
+        }
       }
 
       // This function should fetch one entry from the given endpoint.
       // From the 4 CRUD actions, this is the READ action, and uses the GET http method.
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
-      function fetchOne() {
+      async function fetchOne() {
         // TODO
+        document.getElementById("recordIDcontainer").style.display = "none"
+        document.getElementById("recordForm").style.display = "none"
+
+
+        let toFetch = prompt("Enter record ID")
+
+        let res = await fetch(document.getElementById("endpoint").value+"/"+toFetch)
+        console.log(res)
+        if (res.status >= 200  && res.status <= 299) {
+          const json = await res.json()
+          document.getElementById("output").value = JSON.stringify(json)
+        } else {
+          console.log(res.status + " " + res.statusText)
+          document.getElementById("output").value = "Network Error: " + res.status + " " + res.statusText
+        }
       }
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
+      async function createRecord() {
         // TODO
+        if (document.getElementById("recordForm").style.display == "block" && document.getElementById("recordIDcontainer").style.display == "none") {
+          let data = {"title": document.getElementById("title").value, "author": document.getElementById("author").value}
+          let res = await fetch(document.getElementById("endpoint").value, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+          })
+
+          if (res.status >= 200  && res.status <= 299) {
+            const json = await res.json()
+            document.getElementById("output").value = JSON.stringify(json)
+          } else {
+            document.getElementById("output").value = "Network Error: " + res.status + " " + res.statusText
+          }
+
+          return;
+        }
+
+
+        document.getElementById("recordIDcontainer").style.display = "none"
+        document.getElementById("recordForm").style.display = "block"
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
       // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function updateRecord() {
-        // TODO
+      async function updateRecord() {
+         // TODO
+         if (document.getElementById("recordForm").style.display == "block" && document.getElementById("recordIDcontainer").style.display == "block") {
+          let data = {"title": document.getElementById("title").value, "author": document.getElementById("author").value}
+          let res = await fetch(document.getElementById("endpoint").value+"/"+document.getElementById("recordID").value, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+          })
+
+          if (res.status >= 200  && res.status <= 299) {
+            const json = await res.json()
+            document.getElementById("output").value = JSON.stringify(json)
+          } else {
+            document.getElementById("output").value = "Network Error: " + res.status + " " + res.statusText
+          }
+
+          return;
+        }
+
+
+        document.getElementById("recordIDcontainer").style.display = "block"
+        document.getElementById("recordForm").style.display = "block"
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -116,8 +185,23 @@
       // The main difference from fetchOne() will be the HTTP method you use to make your
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
       // delete all, only delete one.
-      function deleteRecord() {
+      async function deleteRecord() {
         // TODO
+        document.getElementById("recordIDcontainer").style.display = "none"
+        document.getElementById("recordForm").style.display = "none"
+
+
+        let toFetch = prompt("Enter record ID")
+
+        let res = await fetch(document.getElementById("endpoint").value+"/"+toFetch, {method: 'DELETE'})
+        console.log(res)
+        if (res.status >= 200  && res.status <= 299) {
+          const json = await res.json()
+          document.getElementById("output").value = JSON.stringify(json)
+        } else {
+          console.log(res.status + " " + res.statusText)
+          document.getElementById("output").value = "Network Error: " + res.status + " " + res.statusText
+        }
       }
 
       window.addEventListener('DOMContentLoaded', () => {
